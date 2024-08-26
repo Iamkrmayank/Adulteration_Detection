@@ -1,9 +1,18 @@
-1.Dataset
-The dataset used in this study pertains to the analysis of jeera powder (cumin powder) images. Initially, macro images of jeera powder were captured to extract relevant statistical features. These features were then compiled into a structured dataset. The objective of this dataset is to utilize the extracted features for classification tasks, potentially to distinguish between different qualities or types of jeera powder.  Data Collection
-The images of jeera powder were obtained using a high-resolution camera capable of capturing macro images. This ensured detailed and high-quality images, which are essential for accurate feature extraction. The images were processed using image analysis techniques to derive several statistical features. 
+# 1.Dataset
+The dataset used in this study pertains to the analysis of jeera powder (cumin powder) images. Initially, macro images of jeera powder were captured to extract relevant statistical features. 
+These features were then compiled into a structured dataset. The objective of this dataset is to utilize the extracted features for classification tasks, potentially to distinguish between different
+qualities or types of jeera powder. 
+
+Data Collection
+The images of jeera powder were obtained using a high-resolution camera capable of capturing macro images. 
+This ensured detailed and high-quality images, which are essential for accurate feature extraction. The images were processed using image analysis techniques to derive several statistical features. 
+
 Data Extraction
 Data extraction refers to the process of retrieving specific data from various sources to transform it into a format suitable for further processing and analysis. This involves identifying, retrieving, and transforming data so that it can be used for various purposes such as analysis, reporting, and integration into databases or applications.
- Dataset Features The dataset comprises the following columns, each representing a specific statistical attribute extracted from the jeera powder images:  mean_intensity: The average intensity of the pixels in the image. This feature indicates the overall brightness of the image. 
+
+Dataset Features The dataset comprises the following columns, each representing a specific statistical attribute extracted from the jeera powder images:  
+
+mean_intensity: The average intensity of the pixels in the image. This feature indicates the overall brightness of the image. 
 median_intensity: The median value of the pixel intensities in the image. This is useful for understanding the central tendency of the pixel values, particularly in the presence of outliers. 
 mode_intensity: The most frequently occurring pixel intensity value in the image. This feature can highlight the most common pixel value, giving insights into the most dominant intensity level. 
 std_intensity: The standard deviation of the pixel intensities. This measure indicates the spread or variability of the intensity values around the mean, reflecting the contrast in the image. 
@@ -11,11 +20,18 @@ var_intensity: The variance of the pixel intensities. Similar to standard deviat
 skewness: A measure of the asymmetry of the distribution of pixel intensities. This can help in understanding the distribution shape and whether there are more dark or light pixels. 
 kurtosis: A measure of the "tailedness" of the distribution of pixel intensities. High kurtosis indicates more pixels with extreme intensity values, either very dark or very bright. 
 Outcome: The target variable, which contains binary values (0 or 1). This column indicates the classification result based on the extracted features. For instance, it may denote different quality grades of the jeera powder.
-Class Imbalance and SMOTE Application Initially, the 'Outcome' column exhibited a significant class imbalance with the following distribution:  Class 0: 25 instances Class 1: 225 instances 
+
+Class Imbalance and SMOTE Application Initially, the 'Outcome' column exhibited a significant class imbalance with the following distribution: 
+Class 0: 25 instances Class 1: 225 instances 
+
 To address this imbalance and ensure that the machine learning models are not biased towards the majority class, we applied the Synthetic Minority Over-sampling Technique (SMOTE). SMOTE generates synthetic samples for the minority class (Class 0 in this case) by interpolating between existing samples. This helps to create a more balanced dataset without merely duplicating existing records.  Post-SMOTE Application After applying SMOTE, the dataset achieved a balanced distribution of the 'Outcome' values, resulting in equal representation of both classes. This balanced dataset is crucial for training robust and unbiased models, improving their ability to generalize and perform well on unseen data.
+
 Class 0: 225 instances Class 1: 225 instances
+
 Link for Dataset: https://github.com/Iamkrmayank/Adulteration_Detection/blob/main/Jeera_New.xlsx
+
 2.Data Preparation
+
 To ensure the quality and reliability of the dataset, several preprocessing steps were undertaken:
 (a). Data Exploration 
 This involves understanding the dataset by summarizing its main characteristics often using visual methods. It includes inspecting the data types, checking for missing values, and computing basic statistics.
@@ -30,24 +46,13 @@ This involves standardizing or normalizing the features so that they have simila
 •  Standard scaling (zero mean, unit variance): StandardScaler()
 •  Min-max scaling (scaling features to a fixed range, e.g., 0 to 1): MinMaxScaler()
 
- 
 
-
-
-
-
-
-
-
-
-
-
+![Picture1](https://github.com/user-attachments/assets/5ed17462-f93d-4710-b6dc-629d0f19b0dd)
 
 3.Proposed Model
 Stacking classifier
 
- 
-
+![Picture2](https://github.com/user-attachments/assets/1b7ee98f-6cd3-4b66-bd3f-f2ef296f1994)
 
 An ensemble learning technique called stacking classifier leverages the strengths of multiple base models to improve prediction accuracy. It works by combining predictions from many base models, each trained with different hyperparameters or techniques, to create a robust meta model. 
 Using the base models' diverse viewpoints on the dataset, this meta model—also called a blender or aggregator—skillfully learns to synchronise the predictions produced by the base models. 
@@ -58,34 +63,37 @@ A stacking classifier is an ensemble method that combines multiple machine learn
 	MLP Classifier (Multi-Layer Perceptron)
 	AdaBoost (Adaptive Boosting)
 These base models are trained on the same training set independently. Mathematically, if 80% is the training set and 20% is the target variable:
-QDA:         y_QDA^^=QDA(x)
-				MLP CLassifier:  y_MLP^^=MLP(x)
-				AdaBoost∶ y_Ada^^=AdaBoost(x)
-2. Creating a New Training Set
+
+![image](https://github.com/user-attachments/assets/28ac8414-41c8-49b4-8a56-e4441afe71b2)
+
+3. Creating a New Training Set
+
 The predictions from the base models are used to create a new training set. This new training set is typically composed of the outputs (predictions) of the base models. If there are N training samples and k base models, the new training set 0.80 will have 8 features (each feature being the prediction of a base model):
 
- 
-3. Training the Meta Model (Logistic Regression)
+![image](https://github.com/user-attachments/assets/ae082825-b6de-459d-b84e-4f71cf77ae75)
+
+5. Training the Meta Model (Logistic Regression)
 The new training set 0.80 is used to train a meta-model (in this case, Logistic Regression). The meta-model learns how to combine the predictions of the base models to make the final prediction. Mathematically:
 Meta Model: y_Meta^^=  LogisticRegression(x)
-4. Making Final Predictions
+6. Making Final Predictions
 The final predictions are made by the meta-model. The new data (test set) is passed through the base models to get their predictions, which are then used as input for the meta-model to produce the final predictions. If X_test is the test set:
-(a) Get predictions from base models:
-y_QDA^^  (X test) ,y_MLP^^  (X test)  ,〖         y〗_Ada^^  (X test)
+(a) Get predictions from base models
 (b) Form the new test set for the meta-model:
- 
 (c) Make final predictions with the meta-model:
-Meta Model: y_Meta^^=  LogisticRegression(x)
+Meta Model: y_Meta^^ =  LogisticRegression(x)
+
 Logistic Regression
 Logistic regression models the probability that a given input X belongs to a certain class y. For binary classification, y can take on values 0 or 1. Instead of modelling y directly, logistic regression models the probability that y = 1 using the logistic function (also called the sigmoid function).
 Logistic Function (Sigmoid Function)
 The logistic function is defined as:
+
 σ(z)=1/(1+ e^(-z) )
+
 where z is a linear combination of the input features. The logistic function maps any real-valued number into the range [0, 1], making it suitable for probability estimation.
 Logistic Regression Model
+
 In logistic regression, the probability that y = 1given the input features x = {x1,x2,x3,}
 P(y=1│x)=σ(z)=1/(1+e^z )
-
 where
 	z= W^T x+b= w_1 x_1+ w_2 x_2+ w_3 x_3+⋯+ w_n X_n+b 
 	w is the vector of weights (coefficients).
@@ -93,16 +101,6 @@ where
 	b is the bias term (intercept).
 
 	x is the input feature vector.
-
-
-
-
-
-
-
-
-
-
 
 GaussianNB
 Gaussian Naive Bayes (GaussianNB) is a classification algorithm that applies the principles of Bayes' theorem with the assumption of independence among predictors, and it assumes that the continuous features follow a Gaussian (normal) distribution. Here's an explanation of Gaussian Naive Bayes with relevant equations:
@@ -119,9 +117,11 @@ where
 
 	P(X)is the evidence or the total probability of the feature vector X.
 Naive Bayes Assumption
+
 The "naive" assumption in Naive Bayes is that all features X_i  are independent given the class y:
 P(X│y)= ∏_1^n▒〖P(X_i 〗|y)
 where 〖X = (X〗_1,X_2,X_3….,X_(n) ) is the feature vector. 
+
 Gaussian Naive Bayes
 In Gaussian Naive Bayes, we assume that the continuous features follow a Gaussian distribution. The probability density function of the Gaussian distribution is given by:
 P(X_i│y)=1/√(2πσ_(y,i)^2 ) exp⁡(-(X_i-μ_(y,i) )^2/(2σ_(y,i)^2 ))
@@ -133,6 +133,7 @@ Using Bayes' theorem and the naive assumption, the posterior probability P(y∣X
 P(y│X)∝P(y).∏_1^n▒〖P(X_i 〗|y)
 Substituting the Gaussian distribution into this equation:
 P(y│X)∝P(y).∏_1^n▒1  1/√(2πσ_(y,i)^2 ) exp⁡(-(X_i-μ_(y,i) )^2/(2σ_(y,i)^2 ))
+
 Classification
 To classify a new instance X, we compute the posterior probability for each class and choose the class with the highest posterior probability:
 y^^=arg⁡〖  〗 〖max〗_y  P(y|X)
@@ -140,16 +141,6 @@ In practice, since we are multiplying many probabilities, it is numerically more
 log⁡〖P(y│X)〗 α log⁡P(y)  + ∑_1^n▒〖logP(X_i |y)〗
 Substituting the Gaussian distribution:
 log⁡〖P(y│X)〗 α log⁡P(y)-∑_1^n▒〖log⁡(√(2πσ_(y,i)^2+〖(X_i-μ_(y,i))〗^2/(2σ_(y,i)^2 ))〗
-
-
-
-
-
-
-
-
-
-
 
 XGBoost
 XGBoost (Extreme Gradient Boosting) is an optimized distributed gradient boosting library designed to be highly efficient, flexible, and portable. It implements machine learning algorithms under the Gradient Boosting framework.
@@ -218,21 +209,6 @@ For t=1,2,3,….,T (where T  is the total number of iterations):
 Final Strong Classifier
 The final strong classifier H(x) is a weighted majority vote of the T weak classifiers:
 H(x)=sign(∑_(t=1)^T▒〖α_t h_t (x〗))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Result and Discussion
